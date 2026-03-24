@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMT JOBS | Job Portal & DSA Preparation</title>
+    <meta name="description"
+        content="All-in-one platform for job searching, DSA preparation, company hiring patterns, and technical notes.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <canvas id="three-bg"></canvas>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">KodNest Jobs<span>.</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#jobs" class="active">Jobs</a>
+            <a href="aptitude.html">Aptitude</a>
+            <a href="dsa.html">DSA Sheet</a>
+            <a href="compiler.html">Compiler</a>
+            <a href="technical.html">Technical</a>
+            <a href="hr.html">HR Prep</a>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme" style="margin-right: 1rem;">
+                <i class="fa fa-moon"></i>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='signup.html'">Sign Up</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <h1>KodNest Jobs <span>PreparationHub</span></h1>
+            <p>Your all-in-one roadmap to master DSA, Aptitude, and Technical interviews with multi-page tracking.</p>
+            <div class="search-bar">
+                <i class="fa fa-search" style="color: var(--text-dim); margin-top: 10px;"></i>
+                <input type="text" id="hero-search-input" placeholder="Search roles, companies, or topics...">
+                <button id="hero-search-btn" class="btn-primary">Search</button>
+            </div>
+        </section>
+
+        <!-- Jobs Section -->
+        <section id="jobs" class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div class="section-title" style="margin-bottom: 0;">
+                    <h2>Latest Opportunities</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="job-controls" style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="toggle-group"
+                        style="background: var(--card-bg); padding: 0.3rem; border-radius: 50px; border: 1px solid var(--glass-border); display: flex;">
+                        <button id="show-static-jobs" class="toggle-btn active"
+                            style="padding: 0.5rem 1.2rem; border-radius: 50px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; transition: var(--transition);">Internal</button>
+                        <button id="show-live-jobs" class="toggle-btn"
+                            style="padding: 0.5rem 1.2rem; border-radius: 50px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; transition: var(--transition);">Live
+                            (API)</button>
+                    </div>
+                    <button id="refresh-jobs-btn" class="btn-primary"
+                        style="padding: 0.6rem 1.2rem; font-size: 0.9rem; display: none;">
+                        <i class="fa fa-sync-alt" id="refresh-icon"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div id="tech-trends" class="card"
+                style="margin-bottom: 2rem; padding: 1.5rem; display: none; background: rgba(99, 102, 241, 0.05); border-left: 4px solid var(--primary);">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h4 style="color: var(--primary); font-size: 1rem; margin-bottom: 0.3rem;"><i
+                                class="fa fa-chart-line"></i> Live Tech Trends</h4>
+                        <p id="trends-summary" style="font-size: 0.85rem; color: var(--text-dim);">Analyzing current
+                            market requirements...</p>
+                    </div>
+                    <div id="trends-tags"
+                        style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
+                        <!-- Top tags will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div class="search-bar"
+                    style="max-width: none; flex: 1; margin: 0; min-width: 280px; box-shadow: none; background: rgba(255,255,255,0.03);">
+                    <i class="fa fa-search" style="color: var(--text-dim); margin-top: 10px;"></i>
+                    <input type="text" id="jobs-search-input" placeholder="Filter positions, skills, or companies...">
+                </div>
+                <div class="job-filters"
+                    style="display: flex; gap: 0.5rem; align-items: center; overflow-x: auto; padding-bottom: 0.5rem;">
+                    <button class="btn-primary filter-btn active" data-filter="all"
+                        style="padding: 0.5rem 1.2rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--glass-border); box-shadow: none; border-radius: 50px;">All
+                        Trades</button>
+                    <button class="btn-primary filter-btn" data-filter="Remote"
+                        style="padding: 0.5rem 1.2rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--glass-border); box-shadow: none; border-radius: 50px;">Remote</button>
+                    <button class="btn-primary filter-btn" data-filter="India"
+                        style="padding: 0.5rem 1.2rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--glass-border); box-shadow: none; border-radius: 50px;">India</button>
+                    <button class="btn-primary filter-btn" data-filter="Full-time"
+                        style="padding: 0.5rem 1.2rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--glass-border); box-shadow: none; border-radius: 50px;">Full-time</button>
+                    <button class="btn-primary filter-btn" data-filter="Contract"
+                        style="padding: 0.5rem 1.2rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--glass-border); box-shadow: none; border-radius: 50px;">Contract</button>
+                </div>
+            </div>
+
+            <div id="jobs-loading" style="display: none; padding: 2rem;">
+                <div class="grid">
+                    <div class="card skeleton" style="height: 180px;"></div>
+                    <div class="card skeleton" style="height: 180px;"></div>
+                    <div class="card skeleton" style="height: 180px;"></div>
+                </div>
+            </div>
+            <div class="grid" id="jobs-grid">
+                <!-- Job Cards will be injected here -->
+            </div>
+        </section>
+
+        <!-- Preparation Section -->
+        <section id="prep" class="container">
+            <div class="section-title">
+                <h2>Preparation Hub</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <div class="icon-box"><i class="fa fa-calculator"></i></div>
+                    <h3>Aptitude</h3>
+                    <p>Quantitative, logical reasoning, and verbal ability training.</p>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="window.location.href='aptitude.html'"
+                            style="text-decoration: none; flex: 1;">Explore Notes</button>
+                        <button class="btn-primary" onclick="window.location.href='aptitude.html#aptitude-roadmap'"
+                            style="background: transparent; border: 1px solid var(--primary); box-shadow: none; flex: 1;">Practice</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon-box"><i class="fa fa-code"></i></div>
+                    <h3>DSA Core</h3>
+                    <p>In-depth notes on Data Structures and Algorithms.</p>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="window.location.href='dsa.html'"
+                            style="text-decoration: none; flex: 1;">View Topics</button>
+                        <button class="btn-primary" onclick="window.location.href='dsa.html#dsa'"
+                            style="background: transparent; border: 1px solid var(--primary); box-shadow: none; flex: 1;">Practice</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon-box"><i class="fa fa-microchip"></i></div>
+                    <h3>Technical</h3>
+                    <p>Operating Systems, DBMS, Networking, and System Design.</p>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="window.location.href='technical.html'"
+                            style="text-decoration: none; flex: 1;">Start Learning</button>
+                        <button class="btn-primary" onclick="window.location.href='technical.html#technical-roadmap'"
+                            style="background: transparent; border: 1px solid var(--primary); box-shadow: none; flex: 1;">Practice</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon-box"><i class="fa fa-comments"></i></div>
+                    <h3>HR Prep</h3>
+                    <p>Behavioral questions and mock interview guides.</p>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="window.location.href='hr.html'"
+                            style="text-decoration: none; flex: 1;">Prepare Now</button>
+                        <button class="btn-primary" onclick="window.location.href='hr.html#hr-roadmap'"
+                            style="background: transparent; border: 1px solid var(--primary); box-shadow: none; flex: 1;">Practice</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Companies Section -->
+        <section id="companies" class="container">
+            <div class="section-title">
+                <h2>Company Insights</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="grid" id="company-grid">
+                <!-- Company Insights will be injected here -->
+            </div>
+        </section>
+
+        <!-- Dynamic Company Guide Section -->
+        <section id="company-guide-section" class="container" style="display: none; margin-top: 50px;">
+            <div class="section-title" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h2 id="guide-company-name">Company Guide</h2>
+                    <div class="divider"></div>
+                </div>
+                <button id="close-guide"
+                    style="background: transparent; border: none; color: var(--text-dim); font-size: 1.5rem; cursor: pointer; transition: var(--transition);"><i
+                        class="fa fa-times"></i></button>
+            </div>
+            <div id="guide-content" class="card" style="padding: 2rem;">
+                <!-- Detailed guide will be injected here -->
+            </div>
+        </section>
+
+        <div id="job-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h2 id="modal-job-title">Apply for Role</h2>
+                        <p id="modal-job-company" style="color: var(--text-dim); font-size: 0.9rem; margin-top: 5px;">
+                        </p>
+                    </div>
+                    <button id="close-modal" class="close-btn"><i class="fa fa-times"
+                            style="box-shadow: none;"></i></button>
+                </div>
+                <form id="application-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="app-name" placeholder="John Doe" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="app-email" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="app-phone" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Work Experience (Years)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="app-experience" placeholder="e.g. 2" required min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Current CTC (LPA)</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="app-ctc" placeholder="e.g. 8.5" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Notice Period (Days)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="app-notice" placeholder="e.g. 30" required min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Resume (PDF Link or Upload Simulation)</label>
+                        <div class="input-wrapper">
+                            <input type="file" id="app-resume" accept=".pdf" required class="file-input">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Portfolio / LinkedIn</label>
+                            <div class="input-wrapper">
+                                <input type="url" id="app-portfolio" placeholder="https://linkedin.com/in/..." required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>GitHub Profile / ID</label>
+                            <div class="input-wrapper">
+                                <input type="url" id="app-github" placeholder="https://github.com/yourusername"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Experience Highlights</label>
+                        <div class="input-wrapper">
+                            <textarea id="app-message" rows="3"
+                                placeholder="Tell us what makes you a great fit..."></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 1rem;">Submit Application</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer style="text-align: center; padding: 50px; border-top: 1px solid var(--glass-border); margin-top: 100px;">
+        <p>&copy; 2024 PrepHub Portal. Built for excellence.</p>
+    </footer>
+
+    <script src="js/problems-db.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html
